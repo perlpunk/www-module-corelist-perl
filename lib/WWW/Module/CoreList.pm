@@ -211,13 +211,11 @@ sub mversion {
         my @versions;
         for my $v (sort keys %Module::CoreList::version) {
             next unless exists $Module::CoreList::version{$v}->{$mod};
-            my $pv = sprintf "%-10s", $v;
             my $mv = $Module::CoreList::version{$v}{$mod};
-            my $version = $pv;
             my $date = $Module::CoreList::released{$v};
             my $entry = {
                 name => $mod,
-                vers => $version,
+                vers => $v,
                 mvers => $mv,
                 date => $date,
             };
@@ -244,7 +242,6 @@ sub pversion {
     my $submits = $request->submit;
 
     my $v = $request->param('perl_version') || '';
-    my $pv = sprintf "%-10s", $v;
     my @versions;
     $self->stash->{p}->{pv} = $v;
     warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$v], ['v']);

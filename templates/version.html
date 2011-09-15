@@ -9,7 +9,7 @@
     [%if vers %]
     <a href="[%= .self %]/mversion?module=[%= name escape=url %]">[%= name %]</a></td>
     <td>[%= mvers %]</td>
-    <td><tt><a href="[%= .self %]/pversion?v=[%= vers escape=url %]">[%= vers %]</a></tt>
+    <td><tt><a href="[%= .self %]/pversion?perl_version=[%= vers escape=url %]">[%= vers %]</a></tt>
     [%else %]
     [%= name %]</td>
     <td></td>
