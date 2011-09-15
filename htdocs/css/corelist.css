@@ -127,15 +127,16 @@ img {
 
 div.function {
     width: 45%;
-min-width: 30em;
+    min-width: 30em;
     height: 300px;
     float: left;
     border: 1px solid #bbbbff;
     margin: 10px;
     padding: 5px;
+    overflow-y: auto;
 }
 div.function_small {
-    height: 150px;
+    height: 160px;
 }
 
 div.function > h1 {

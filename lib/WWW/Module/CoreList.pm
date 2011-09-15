@@ -136,20 +136,23 @@ sub version {
         my $fuzzy = $submits->{fuzzy};
         my $version = Module::CoreList->first_release($module);
         my $mversion;
-        if ($version and $Module::CoreList::version{$version}) {
+        my $removed;
+        if ($version and exists $Module::CoreList::version{$version}) {
             $mversion = $Module::CoreList::version{$version}->{$module};
+            $found = 1;
         }
         my $date;
-        if ($mversion) {
+        if ($version) {
             $date = $Module::CoreList::released{$version};
+            $removed = Module::CoreList->removed_from($module);
         }
         @versions = {
             name => $module,
             vers => $version,
             mvers => $mversion,
             date => $date,
+            removed => $removed,
         };
-        $found = 1 if $version;
         if ($submits->{fuzzy} or not $found) {
             push @list, sort Module::CoreList->find_modules(qr/\Q$module/i);
             shift @list if $found;
@@ -158,15 +161,18 @@ sub version {
             my $version = Module::CoreList->first_release($mod);
             my $date;
             my $mv;
+            my $removed;
             if ($version) {
                 $mv = $Module::CoreList::version{$version}{$mod} || 'undef';
                 $date = $Module::CoreList::released{$version};
+                $removed = Module::CoreList->removed_from($mod);
             }
             my $entry = {
                 name => $mod,
                 vers => $version,
                 mvers => $mv,
                 date => $date,
+                removed => $removed,
             };
             push @versions, $entry;
         }

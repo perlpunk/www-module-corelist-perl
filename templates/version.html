@@ -2,7 +2,7 @@
 
 [%with .show_version %]
 <table class="modules">                                                                                              
-<tr><th>Module</th><th>Module Version</th><th>Perl version</th><th>Perl Release</th></tr>
+<tr><th>Module</th><th>Module Version</th><th>Perl version</th><th>Perl Release</th><th>removed</th></tr>
 [%loop versions %]
 <tr>
 <td>
@@ -17,6 +17,7 @@
     [%/if vers %]
 </td>
 <td>[%= date %]</td>
+<td>[%= removed %]</td>
 </tr>
 [%/loop versions %]
 </table>
