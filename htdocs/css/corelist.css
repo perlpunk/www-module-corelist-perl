@@ -168,7 +168,7 @@ table.modules td {
 }
 
 #content {
-    margin: 20px;
+    margin: 15px;
     float: left;
     width: 90%;
 }
@@ -199,5 +199,25 @@ table.diff tt.diff_version {
     background-color: #ff55ff;
 }
 div.legend {
-float: right;
+    float: right;
+}
+span.corelist_info {
+    margin: 1px;
+    float: right;
+    color: white;
+}
+span.corelist_info a {
+    color: white;
+}
+
+#info {
+    clear: both;
+    width: 99%;
+    background-color: #dddddd;
+    padding: 5px;
+    color: #222222;
+}
+hr {
+    border: 0px solid grey;
+    border-top: 1px solid grey;
 }

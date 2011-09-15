@@ -65,6 +65,7 @@ sub run {
         seo => {
             index_archive => $seo,
         },
+        corelist_version => Module::CoreList->VERSION,
     };
     $self->stash($stash);
     if (exists $actions{ $action }) {
