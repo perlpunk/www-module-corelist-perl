@@ -54,10 +54,17 @@ sub run {
     $self->request($request);
     my $action = $request->action || 'index';
     warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$action], ['action']);
+    my $seo = 'noindex,noarchive';
+    if (! $ENV{QUERYSTRING} or ! length $ENV{QUERYSTRING}) {
+#        $seo = 'index,archive';
+    }
     my $stash = {
         self => $self->conf->{self},
         action => $action,
         selected => { $action => 1 },
+        seo => {
+            index_archive => $seo,
+        },
     };
     $self->stash($stash);
     if (exists $actions{ $action }) {
