@@ -10,6 +10,8 @@ use Module::CoreList;
 use WWW::Module::CoreList::Request;
 use YAML qw/ LoadFile /;
 
+our $VERSION = 0.001;
+
 sub init {
     my ($class, $inifile) = @_;
     my $conf = LoadFile($inifile);
@@ -327,3 +329,38 @@ sub diff {
 
 1;
 
+__END__
+
+=pod
+
+=head1 NAME
+
+WWW::Module::CoreList - A web interface to Module::CoreList
+
+=head1 SYNOPSIS
+
+    my $inifile = '/path/to/corelist.yaml';
+    my $cl = WWW::Module::CoreList->init($inifile);
+    $cl->run;
+    my ($out, $mode) = $cl->output;
+    binmode STDOUT, $mode;
+    print $out if defined $out;
+
+
+=head1 SEE ALSO
+
+L<Module::CoreList>
+
+=head1 AUTHOR
+
+Tina Mueller
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2011 by Tina Mueller
+
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself, either Perl version 5.6.1 or, at your option,
+any later version of Perl 5 you may have available.
+
+=cut
