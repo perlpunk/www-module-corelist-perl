@@ -19,3 +19,6 @@ conf/corelist.yaml.sample
 README
 htdocs/css/corelist.css
 htdocs/js/corelist.js
+Makefile.PL
+META.yml
+META.json
