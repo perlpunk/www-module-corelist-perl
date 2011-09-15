@@ -1,0 +1,43 @@
+<script type="text/javascript"><!--
+    var toggleState = new Object();
+    toggleState['removed'] = '[%= .p.show_removed %]';
+    toggleState['added'] = '[%= .p.show_added %]';
+    toggleState['version'] = '[%= .p.show_version %]';
+    toggleState['none'] = '[%= .p.show_none %]';
+--></script>
+
+[%include diff_form.html %]
+<div class="legend" >
+    <table class="diff">
+        <tr><td class="diff_added">Added modules</td></tr>
+        <tr><td class="diff_removed">Removed modules</td></tr>
+        <tr><td >Changed <tt class="diff_version">version</tt></td></tr>
+        <tr><td class="diff_none">No difference</td></tr>
+    </table>
+
+
+</div>
+<div style="clear: both;">
+
+<table class="diff">
+    <tr><th>[%= .v1 %]</th><th>[%= .v2 %]</th></tr>
+[%loop .difflist %]
+[%switch diff %]
+[%case added %]
+<tr class="added [%unless .p.show_added %]invisible[%/unless %]" id="added[%= __index__ %]">
+    <td class="diff_added">&nbsp;</td><td class="diff_added"><a href="[%= .self %]/mversion?module=[%= _name escape=url %]">[%= name %]</a> <tt>[%= m2 %]</tt></td>
+[%case removed %]
+<tr class="removed [%unless .p.show_removed %]invisible[%/unless %]" id="removed[%= __index__ %]">
+    <td class="diff_removed"><a href="[%= .self %]/mversion?module=[%= _name escape=url %]">[%= name %]</a> <tt>[%= m1 %]</tt></td><td class="diff_removed">&nbsp;</td>
+[%case version %]
+<tr class="version [%unless .p.show_version %]invisible[%/unless %]" id="version[%= __index__ %]">
+    <td class="diff_version"><a href="[%= .self %]/mversion?module=[%= _name escape=url %]">[%= name %]</a> <tt class="diff_version">[%= m1 %]</tt></td><td class="diff_version"><a href="[%= .self %]/mversion?module=[%= _name escape=url %]">[%= name %]</a> <tt class="diff_version">[%= m2 %]</tt></td>
+[%case none %]
+<tr class="none [%unless .p.show_none %]invisible[%/unless %]" id="none[%= __index__ %]">
+    <td class="diff_none" colspan="2"><a href="[%= .self %]/mversion?module=[%= _name escape=url %]">[%= name %]</a> <tt>[%= m2 %]</tt></td>
+[%/switch diff %]
+</tr>
+[%/loop .difflist %]
+</table>
+
+</div>

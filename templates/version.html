@@ -1,0 +1,24 @@
+[%include version_form.html %]
+
+[%with .show_version %]
+<table class="modules">                                                                                              
+<tr><th>Module</th><th>Module Version</th><th>Perl version</th><th>Perl Release</th></tr>
+[%loop versions %]
+<tr>
+<td>
+    [%if vers %]
+    <a href="[%= .self %]/mversion?module=[%= name escape=url %]">[%= name %]</a></td>
+    <td>[%= mvers %]</td>
+    <td><tt><a href="[%= .self %]/pversion?v=[%= vers escape=url %]">[%= vers %]</a></tt>
+    [%else %]
+    [%= name %]</td>
+    <td></td>
+    <td><i>not in core</i>
+    [%/if vers %]
+</td>
+<td>[%= date %]</td>
+</tr>
+[%/loop versions %]
+</table>
+
+[%/with .show_version %]

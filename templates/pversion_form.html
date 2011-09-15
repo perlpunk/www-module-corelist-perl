@@ -1,0 +1,12 @@
+<form action="[%= .self %]/pversion" method="get">
+<p>
+Perl version:
+<br />
+<select name="perl_version" size="10">
+[%html_option .perl_versions %]
+</select>
+<br />
+<input class="button" type="submit" value="Show all modules" />
+</p>
+
+</form>

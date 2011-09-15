@@ -1,0 +1,63 @@
+[%include head.html %]
+<body>
+
+<div id="header_holder">
+    <div class="sub_holder">
+<!--
+        <div id="page_image"></div>
+-->
+        <h1>corelist</h1>
+<!--
+        <div id="logo_holder">
+            <a href="/"><img src="/camel_head.v25e738a.png" id="logo" alt="Perl, modern programming" height="65" align="right" /></a>
+        </div>
+-->
+    </div>
+</div>
+
+
+<div id="nav">
+    <div class="sub_holder">
+<ul>
+    <li [%if .selected.index %]class="selected"[%/if %]>
+        <a href="[%= .self %]/">Home</a>
+    </li>
+    <li [%if .selected.version %]class="selected"[%/if %]>
+        <a href="[%= .self %]/version">First Release</a>
+    </li>
+    <li [%if .selected.mversion %]class="selected"[%/if %]>
+        <a href="[%= .self %]/mversion">Module Versions</a>
+    </li>
+    <li [%if .selected.pversion %]class="selected"[%/if %]>
+        <a href="[%= .self %]/pversion">Perl Versions</a>
+    </li>
+    <li [%if .selected.diff %]class="selected"[%/if %]>
+        <a href="[%= .self %]/diff">Diff</a>
+    </li>
+</ul>
+    </div>
+</div>
+
+<div id="content">
+[%switch .action %]
+[%case index %]
+[%include index2.html %]
+
+[%case version %]
+[%include version.html %]
+
+[%case mversion %]
+[%include mversion.html %]
+
+[%case pversion %]
+[%include pversion.html %]
+
+[%case diff %]
+[%include diff.html %]
+
+[%/switch .action %]
+
+</div>
+
+</body>
+</html>

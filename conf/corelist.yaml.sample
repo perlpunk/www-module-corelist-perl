@@ -1,0 +1,4 @@
+---
+self: /corelist
+cache_dir: /home/tina/develop/sf/corelist/htc_cache
+templates: /home/tina/develop/sf/corelist/templates
