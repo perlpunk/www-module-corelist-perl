@@ -13,7 +13,9 @@ my $build = Module::Build->new(
         'Class::Accessor::Fast' => 0.25,
         'Module::CoreList' => 2.12,
         perl => '5.10.0',
+        YAML => 0.70,
     },
+    dist_abstract => 'Web Interface to Module::CoreList',
     build_requires => {
         'Test::More'          => 0,
     },
