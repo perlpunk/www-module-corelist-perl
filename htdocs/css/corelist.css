@@ -128,7 +128,7 @@ img {
 div.function {
     width: 45%;
     min-width: 30em;
-    height: 300px;
+    height: 24em;
     float: left;
     border: 1px solid #bbbbff;
     margin: 10px;
@@ -136,7 +136,7 @@ div.function {
     overflow-y: auto;
 }
 div.function_small {
-    height: 160px;
+    height: 14em;
 }
 
 div.function > h1 {
