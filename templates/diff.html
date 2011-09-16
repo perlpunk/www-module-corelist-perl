@@ -1,3 +1,35 @@
+<div style="float: right;">
+<div class="legend" >
+    <table class="diff">
+        <tr><td class="diff_added">Added modules</td></tr>
+        <tr><td class="diff_removed">Removed modules</td></tr>
+        <tr><td >Changed <tt class="diff_version">version</tt></td></tr>
+        <tr><td class="diff_none">No difference</td></tr>
+    </table>
+</div>
+
+
+<div class="functionbox functionbox_small function_right">
+<h1>First Release</h1>
+Find out if a perl module is in core and since when.
+[%include version_form.html %]
+</div>
+<div class="functionbox functionbox_small function_right">
+<h1>Module Versions</h1>
+Show perl versions for module.
+[%include mversion_form.html %]
+</div>
+<div class="functionbox function_right">
+<h1>Perl Versions</h1>
+Show all core modules for a perl version.
+[%include pversion_form.html %]
+</div>
+
+
+</div>
+
+
+
 <script type="text/javascript"><!--
     var toggleState = new Object();
     toggleState['removed'] = '[%= .p.show_removed %]';
@@ -6,19 +38,9 @@
     toggleState['none'] = '[%= .p.show_none %]';
 --></script>
 
+<div style="float: left;">
 [%include diff_form.html %]
-<div class="legend" >
-    <table class="diff">
-        <tr><td class="diff_added">Added modules</td></tr>
-        <tr><td class="diff_removed">Removed modules</td></tr>
-        <tr><td >Changed <tt class="diff_version">version</tt></td></tr>
-        <tr><td class="diff_none">No difference</td></tr>
-    </table>
-
-
-</div>
-<div style="clear: both;">
-
+[%if .difflist# %]
 <table class="diff">
     <tr><th>[%= .v1 %]</th><th>[%= .v2 %]</th></tr>
 [%loop .difflist %]
@@ -39,5 +61,6 @@
 </tr>
 [%/loop .difflist %]
 </table>
+[%/if .difflist# %]
 
 </div>

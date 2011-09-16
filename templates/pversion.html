@@ -1,3 +1,25 @@
+<div style="float: right;">
+<div class="functionbox functionbox_small function_right">
+<h1>First Release</h1>
+Find out if a perl module is in core and since when.
+[%include version_form.html %]
+</div>
+<div class="functionbox functionbox_small function_right">
+<h1>Module Versions</h1>
+Show perl versions for module.
+[%include mversion_form.html %]
+</div>
+<div class="functionbox function_right">
+<h1>Diff</h1>
+Compare two perl versions for added, removed or changed modules.
+<br /><br />
+[%include diff_form.html %]
+</div>
+</div>
+
+
+
+<h3>Show all core modules for a perl version.</h3>
 <div style="float: left;">
 [%include pversion_form.html %]
 </div>
@@ -17,7 +39,7 @@
     <td><a href="[%= .self %]/mversion?module=[%= name escape=url %]">[%= name %]</a></td>
     [%if vers %]
     <td>[%= mvers %]</td>
-    <td><tt><a href="[%= .self %]/pversion?perl_version=[%= vers escape=url %]">[%= vers %]</a></tt></td>
+    <td><tt><a href="[%= .self %]/pversion?perl_version=[%= vers escape=url %]">[%= formatted %]</a></tt></td>
     [%else %]
     <td></td>
     <td><i>not in core</i>

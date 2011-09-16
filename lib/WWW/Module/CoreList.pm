@@ -29,7 +29,7 @@ my %actions = (
 );
 my %perl_versions = %Module::CoreList::version;
 my @perl_version_options = (map {
-    $_
+    [$_, format_perl_version($_)]
 } sort keys %perl_versions);
 
 sub run {
@@ -80,9 +80,6 @@ sub run {
         die "unknown action $action";
     }
     my $selected_pv = $self->request->param('perl_version');
-    my @perl_version_options = (map {
-        $_
-    } sort keys %perl_versions);
     $stash->{perl_versions} = [$selected_pv||'', @perl_version_options];
 
 
@@ -154,6 +151,7 @@ sub version {
         @versions = {
             name => $module,
             vers => $version,
+            formatted => format_perl_version($version),
             mvers => $mversion,
             date => $date,
             removed => $removed,
@@ -175,6 +173,7 @@ sub version {
             my $entry = {
                 name => $mod,
                 vers => $version,
+                formatted => format_perl_version($version),
                 mvers => $mv,
                 date => $date,
                 removed => $removed,
@@ -221,6 +220,7 @@ sub mversion {
             my $entry = {
                 name => $mod,
                 vers => $v,
+                formatted => format_perl_version($v),
                 mvers => $mv,
                 date => $date,
             };
@@ -254,9 +254,11 @@ sub pversion {
             my $mv = $Module::CoreList::version{$v}->{$mod} || 'undef';
             my $date = $Module::CoreList::released{$v};
             my $version = Module::CoreList->first_release($mod);
+
             my $entry = {
                 name => $mod,
                 vers => $v,
+                formatted => format_perl_version($v),
                 mvers => $mv,
                 date => $date,
             };
@@ -329,6 +331,14 @@ sub diff {
 
     }
 }
+
+sub format_perl_version {
+    my $v = shift;
+    return $v if $v < 5.006;
+    return version::->new($v)->normal;
+}
+
+
 
 1;
 
