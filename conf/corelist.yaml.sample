@@ -10,5 +10,5 @@ seo:
 # typically only the index page makes sense here
 # if the url contains a querystring index and archive will be disabled
   index:
-    - index
-    - archive
+    - noindex
+    - noarchive
