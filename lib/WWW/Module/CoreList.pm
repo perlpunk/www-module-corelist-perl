@@ -55,7 +55,6 @@ sub run {
     );
     $self->request($request);
     my $action = $request->action || 'index';
-    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$action], ['action']);
     my $seo = 'noindex,noarchive';
     if (! $ENV{QUERYSTRING} or ! length $ENV{QUERYSTRING}) {
 #        $seo = 'index,archive';
@@ -68,6 +67,7 @@ sub run {
             index_archive => $seo,
         },
         corelist_version => Module::CoreList->VERSION,
+        static => $self->conf->{static},
     };
     $self->stash($stash);
     if (exists $actions{ $action }) {
@@ -84,17 +84,17 @@ sub run {
 
 
     my $htc = HTML::Template::Compiled->new(
-        path => $self->conf->{templates},
-        cache => 1,
-        debug => 0,
-        cache_dir => $self->conf->{cache_dir},
-        tagstyle => [qw/ -classic -comment +asp +tt /],
-        plugin => [qw(::HTML_Tags ), ],
+        path            => $self->conf->{templates},
+        cache           => 1,
+        debug           => 0,
+        cache_dir       => $self->conf->{cache_dir},
+        tagstyle        => [qw/ -classic -comment +asp +tt /],
+        plugin          => [qw( ::HTML_Tags ), ],
         use_expressions => 1,
+        default_escape  => 'HTML',
+        filename        => 'index.html',
         search_path_on_include => 1,
-        loop_context_vars => 1,
-        default_escape => 'HTML',
-        filename => 'index.html',
+        loop_context_vars       => 1,
     );
 #    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$stash], ['stash']);
     $htc->param(
@@ -246,15 +246,15 @@ sub pversion {
     my $v = $request->param('perl_version') || '';
     my @versions;
     $self->stash->{p}->{pv} = $v;
-    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$v], ['v']);
     if (exists $Module::CoreList::version{$v}) {
         for my $mod (sort keys %{ $Module::CoreList::version{$v} }) {
+            my $mv = $Module::CoreList::version{$v}->{$mod} || 'undef';
             my $date = $Module::CoreList::released{$v};
             my $version = Module::CoreList->first_release($mod);
             my $entry = {
                 name => $mod,
                 vers => $v,
-                mvers => $version,
+                mvers => $mv,
                 date => $date,
             };
             push @versions, $entry;

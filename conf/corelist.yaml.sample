@@ -1,4 +1,7 @@
 ---
 self: /corelist
+# url to static files if corelist/htdocs is not your DocumentRoot
+# set Alias /cl/ /path/to/corelist/htdocs/ in your webserver
+static: /cl
 cache_dir: /.../corelist/htc_cache
 templates: /.../corelist/templates
