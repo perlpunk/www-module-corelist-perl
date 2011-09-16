@@ -19,6 +19,8 @@ conf/corelist.yaml.sample
 README
 htdocs/css/corelist.css
 htdocs/js/corelist.js
+htdocs/favicon.ico
+INSTALL
 Makefile.PL
 META.yml
 META.json

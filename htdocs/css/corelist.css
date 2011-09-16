@@ -216,7 +216,10 @@ span.corelist_info a {
     width: 99%;
     background-color: #dddddd;
     padding: 5px;
-    color: #222222;
+    color: #404040;
+}
+#info a {
+    color: #404040;
 }
 hr {
     border: 0px solid grey;

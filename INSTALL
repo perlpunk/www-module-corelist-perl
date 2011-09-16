@@ -1,0 +1,32 @@
+INSTALLATION
+
+run
+perl Build.PL
+
+to check module requirements.
+
+MOD_PERL 2
+
+apache2 config:
+    <Perl>
+    use lib '/path/to/www-module-corelist-perl/lib';
+    </Perl>
+    Alias /cl/ /path/to/www-module-corelist-perl/htdocs/
+    PerlPostConfigRequire /path/to/www-module-corelist-perl/bin/mod_perl_startup.pl
+
+    PerlModule WWW::Module::CoreList::Handler2
+    <Location /corelist>
+        PerlSetVar inifile /path/to/www-module-corelist-perl/conf/corelist.yaml
+        SetHandler perl-script
+        PerlHandler WWW::Module::CoreList::Handler2
+    </Location>
+
+corelist.yaml:
+    ---
+    self: /corelist
+    static: /cl
+    cache_dir: /path/to/www-module-corelist-perl/htc_cache
+    templates: /path/to/www-module-corelist-perl/templates
+
+Create /path/to/www-module-corelist-perl/htc_cache writeable
+for apache user.
