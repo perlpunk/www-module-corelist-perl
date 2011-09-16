@@ -25,14 +25,14 @@ Show:<br/>
     <input id="c_added" type="checkbox" [%if .p.show_added %]checked="checked"[%/if %] name="added" value="1" onclick="toggle('added')" /><label for="c_added">added</label><br/>
     <input id="c_version" type="checkbox" [%if .p.show_version %]checked="checked"[%/if %] name="version" value="1" onclick="toggle('version')" /><label for="c_version">version</label><br/>
     <input id="c_none" type="checkbox" [%if .p.show_none %]checked="checked"[%/if %] name="none" value="1" onclick="toggle('none')" /><label for="c_none">no difference</label><br/>
-<input type="submit" name="submit.diff" value="Update" />
+<input type="submit" value="Update" />
 [%else %]
 Show:<br/>
     <input id="c_removed" type="checkbox" checked="checked" name="removed" value="1" /><label for="c_removed">removed</label><br/>
     <input id="c_added" type="checkbox" checked="checked" name="added" value="1" /><label for="c_added">added</label><br/>
     <input id="c_version" type="checkbox" checked="checked" name="version" value="1" /><label for="c_version">version</label><br/>
     <input id="c_none" type="checkbox" name="none" value="1" /><label for="c_none">no difference</label><br/>
-<input type="submit" name="submit.diff" value="Diff" />
+<input type="submit" value="Diff" />
 
 [%/if %]
 
