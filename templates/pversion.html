@@ -1,7 +1,10 @@
+<div style="float: left;">
 [%include pversion_form.html %]
+</div>
 
-[%with .show_version %]
+<div style="margin-left: 4em; float: left;">
 <b>[%= .p.perl_version %]</b>
+[%with .show_version %]
 <br/>
 <table class="modules">
 <tr>
@@ -25,3 +28,4 @@
 </table>
 
 [%/with .show_version %]
+</div>

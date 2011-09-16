@@ -1,12 +1,13 @@
 <form action="[%= .self %]/pversion" method="get">
-<p>
+<p style="float: left;">
 Perl version:
 <br />
 <select name="perl_version" size="10">
 [%html_option .perl_versions %]
 </select>
-<br />
-<input class="button" type="submit" value="Show all modules" />
+</p>
+<p style="float: left; margin-left: 2em; margin-top: 2em;">
+<input class="button" type="submit" value="Modules" />
 </p>
 
 </form>

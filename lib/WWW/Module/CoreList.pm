@@ -248,7 +248,7 @@ sub pversion {
 
     my $v = $request->param('perl_version') || '';
     my @versions;
-    $self->stash->{p}->{pv} = $v;
+    $self->stash->{p}->{perl_version} = $v;
     if (exists $Module::CoreList::version{$v}) {
         for my $mod (sort keys %{ $Module::CoreList::version{$v} }) {
             my $mv = $Module::CoreList::version{$v}->{$mod} || 'undef';
