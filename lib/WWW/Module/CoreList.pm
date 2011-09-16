@@ -55,19 +55,22 @@ sub run {
     );
     $self->request($request);
     my $action = $request->action || 'index';
-    my $seo = 'noindex,noarchive';
-    if (! $ENV{QUERYSTRING} or ! length $ENV{QUERYSTRING}) {
-#        $seo = 'index,archive';
+    my $conf = $self->conf;
+    my @seo = @{ $conf->{seo}->{ $action } || [] };
+    @seo = qw/ noindex noarchive / unless @seo;
+    my $seo = join ',', @seo;
+    if ($ENV{QUERY_STRING}) {
+        $seo = 'noindex,noarchive';
     }
     my $stash = {
-        self => $self->conf->{self},
+        self => $conf->{self},
         action => $action,
         selected => { $action => 1 },
         seo => {
             index_archive => $seo,
         },
         corelist_version => Module::CoreList->VERSION,
-        static => $self->conf->{static},
+        static => $conf->{static},
     };
     $self->stash($stash);
     if (exists $actions{ $action }) {
