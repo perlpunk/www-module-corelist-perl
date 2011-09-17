@@ -1,0 +1,12 @@
+---
+static: /corelist-static
+self: /corelist
+#cache_dir: /home/tina/develop/www-module-corelist-perl/htc_cache
+templates: templates
+seo:
+# which functions should be indexed and/or archived by search engines
+# typically only the index page makes sense
+# if the url contains a querystring index and archive will be disabled
+  index:
+    - noindex
+    - noarchive

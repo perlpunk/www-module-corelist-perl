@@ -354,6 +354,7 @@ WWW::Module::CoreList - A web interface to Module::CoreList
 
 =head1 SYNOPSIS
 
+    # run this in a CGI script, for example
     my $inifile = '/path/to/corelist.yaml';
     my $cl = WWW::Module::CoreList->init($inifile);
     $cl->run;
