@@ -2,10 +2,12 @@ NAME
     WWW::Module::CoreList - A web interface to Module::CoreList
 
 SYNOPSIS
+        # run this in a CGI script, for example
         my $inifile = '/path/to/corelist.yaml';
         my $cl = WWW::Module::CoreList->init($inifile);
         $cl->run;
-        my ($out, $mode) = $cl->output;
+        my ($header, $out, $mode) = $cl->output;
+        print $header;
         binmode STDOUT, $mode;
         print $out if defined $out;
 
