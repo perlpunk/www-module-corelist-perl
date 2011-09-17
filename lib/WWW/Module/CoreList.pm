@@ -289,14 +289,19 @@ sub diff {
     $stash->{p}->{show_added} = $show_added;
     $stash->{p}->{show_version} = $show_version;
     $stash->{p}->{show_none} = $show_none;
-    $stash->{perl_versions_1} = [$v1, @perl_version_options];
-    $stash->{perl_versions_2} = [$v2, @perl_version_options];
     if (! $v1 or ! $v2) {
         my @versions = sort keys %p;
         $stash->{p}->{select} = 1;
+        $stash->{perl_versions_1} = [undef, @perl_version_options];
+        $stash->{perl_versions_2} = [undef, @perl_version_options];
     }   
     else {
         $stash->{p}->{show} = 1;
+        if ($v1 > $v2) {
+            ($v2, $v1) = ($v1, $v2);
+        }
+        $stash->{perl_versions_1} = [$v1, @perl_version_options];
+        $stash->{perl_versions_2} = [$v2, @perl_version_options];
         my $m1 = {};
         if (exists $p{$v1}) {
             $m1 = $p{$v1};
