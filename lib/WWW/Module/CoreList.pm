@@ -28,10 +28,9 @@ my %actions = (
     diff => 1,
     index => 1,
 );
-my %perl_versions = %Module::CoreList::version;
 my @perl_version_options = (map {
     [$_, format_perl_version($_)]
-} sort keys %perl_versions);
+} reverse grep !/000$/, sort keys %Module::CoreList::version);
 
 sub run {
     my ($self) = @_;
