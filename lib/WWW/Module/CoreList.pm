@@ -5,6 +5,7 @@ use Data::Dumper;
 use Carp qw(croak carp);
 use base 'Class::Accessor::Fast';
 __PACKAGE__->mk_accessors(qw/ conf template request stash /);
+use CGI;
 use HTML::Template::Compiled;
 use Module::CoreList;
 use WWW::Module::CoreList::Request;
@@ -107,7 +108,7 @@ sub run {
 sub output {
     my ($self) = @_;
 
-    print $self->request->cgi->header(
+    my $header = $self->request->cgi->header(
         -charset => 'utf-8',
 #        -status => $status,
 #            @$cookie
@@ -116,7 +117,7 @@ sub output {
     );
 
     my $output = $self->template->output;
-    return $output, ':encoding(utf-8)';
+    return $header, $output, ':encoding(utf-8)';
 }
 
 sub index {
@@ -355,7 +356,8 @@ WWW::Module::CoreList - A web interface to Module::CoreList
     my $inifile = '/path/to/corelist.yaml';
     my $cl = WWW::Module::CoreList->init($inifile);
     $cl->run;
-    my ($out, $mode) = $cl->output;
+    my ($header, $out, $mode) = $cl->output;
+    print $header;
     binmode STDOUT, $mode;
     print $out if defined $out;
 

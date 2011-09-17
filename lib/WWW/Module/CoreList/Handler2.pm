@@ -22,7 +22,8 @@ sub handler {
     my $cl = $cl{ $inifile };
     $cl->run;
     {
-        my ($out, $mode) = $cl->output;
+        my ($header, $out, $mode) = $cl->output;
+        print $header;
         binmode STDOUT, $mode;
         eval {
             print $out if defined $out;

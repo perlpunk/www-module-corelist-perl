@@ -39,7 +39,7 @@ sub cookie {
 
 sub from_cgi {
     my ($class, $cgi, %args) = @_;
-    my $default_language = $args{default_language};
+    my $default_language = $args{default_language} || 'de';
     #warn __PACKAGE__.$".Data::Dumper->Dump([\%args], ['args']);
     my $self = $class->new({
             docroot => $args{docroot},
@@ -65,10 +65,10 @@ sub from_cgi {
     $self->submit(\%submits);
     $self->action($action);
     $self->args(\@args);
-    my $cookies = {};
-    $cookies = $self->cgi_class->{cookie}->fetch;
+#    my $cookies = {};
+#    $cookies = $self->cgi_class->{cookie}->fetch;
     #warn Data::Dumper->Dump([\$cookies], ['cookies']);
-    $self->cookies($cookies);
+#    $self->cookies($cookies);
     my %language_cookie = $self->cookie('battie_prefs_lang');
     my $preferred;
     my @lang;
