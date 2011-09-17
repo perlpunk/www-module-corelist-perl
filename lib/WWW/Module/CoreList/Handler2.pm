@@ -34,7 +34,7 @@ sub handler {
         }
     }
     my $elapsed = tv_interval ( $start_time );
-    warn __PACKAGE__.':'.__LINE__.": Elapsed: $elapsed\n";
+#    warn __PACKAGE__.':'.__LINE__.": Elapsed: $elapsed\n";
     return Apache2::Const::OK;
 }
 

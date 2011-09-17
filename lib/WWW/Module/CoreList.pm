@@ -334,6 +334,7 @@ sub diff {
 }
 
 sub format_perl_version {
+    no warnings 'uninitialized';
     my $v = shift;
     return $v if $v < 5.006;
     return version::->new($v)->normal;
