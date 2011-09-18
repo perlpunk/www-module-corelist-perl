@@ -28,6 +28,20 @@ my %actions = (
     diff => 1,
     index => 1,
 );
+my %lc;
+# prepare for case insensitive searching - faster then a regex search
+{
+    my %seen;
+    for my $pv (keys %Module::CoreList::version) {
+        my $modules = $Module::CoreList::version{ $pv };
+        for my $mod (keys %$modules) {
+            next if $seen{ $mod }++;
+            my $lower = lc $mod;
+            # array - there are modules like PerlIO::scalar and PerlIO::Scalar
+            push @{ $lc{ $lower } }, $mod;
+        }
+    }
+}
 my @perl_version_options = (map {
     [$_, format_perl_version($_)]
 } reverse grep !/000$/, sort keys %Module::CoreList::version);
@@ -156,6 +170,33 @@ sub version {
             date => $date,
             removed => $removed,
         };
+        if (not $submits->{fuzzy} and not $found) {
+            # try case insensitive
+            my $lower = lc $module;
+            if (exists $lc{ $lower }) {
+                for my $mod (@{ $lc{ $lower } }) {
+                    my $version = Module::CoreList->first_release($mod);
+                    if ($version and exists $Module::CoreList::version{$version}) {
+                        $mversion = $Module::CoreList::version{$version}->{$module};
+                    }
+                    my $date;
+                    if ($version) {
+                        $date = $Module::CoreList::released{$version};
+                        $removed = Module::CoreList->removed_from($mod);
+                    }
+                    my $entry = {
+                        name => $mod,
+                        vers => $version,
+                        formatted => format_perl_version($version),
+                        mvers => $mversion,
+                        date => $date,
+                        removed => $removed,
+                    };
+                    push @versions, $entry;
+                }
+                $found = 1;
+            }
+        }
         if ($submits->{fuzzy} or not $found) {
             push @list, sort Module::CoreList->find_modules(qr/\Q$module/i);
             shift @list if $found;
