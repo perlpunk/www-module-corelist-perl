@@ -49,9 +49,8 @@ sub from_cgi {
     my ($action, @args) = $class->parse_args($cgi);
     $self->path_info('/' . join '/', grep defined, $action, @args);
     my %submits;
-    # only set submit buttons if method is post (security)
     $self->cgi($cgi);
-    if ($self->is_post) {
+#    if ($self->is_post) {
         %submits = map {
             my $key = $_;
             my $value = $cgi->param($key);
@@ -60,8 +59,7 @@ sub from_cgi {
             }
             else { () }
         } $cgi->param();
-    }
-    warn __PACKAGE__.':'.__LINE__.": SUBMIT: @{[ sort keys %submits ]}\n" if keys %submits;;
+#    }
     $self->submit(\%submits);
     $self->action($action);
     $self->args(\@args);
@@ -69,57 +67,16 @@ sub from_cgi {
 #    $cookies = $self->cgi_class->{cookie}->fetch;
     #warn Data::Dumper->Dump([\$cookies], ['cookies']);
 #    $self->cookies($cookies);
-    my %language_cookie = $self->cookie('battie_prefs_lang');
-    my $preferred;
-    my @lang;
-    if ($language_cookie{lang}) {
-        $preferred = $language_cookie{lang};
-    }
-    else {
-        my $language = $cgi->http('Accept-language') || $default_language;
-        @lang = split m/,/, $language;
-        # TODO
-        #warn __PACKAGE__.':'.__LINE__.": Accept-language: (@lang)\n";
-        for my $lang (@lang) {
-            my ($l, $weight) = split m/;/, $lang;
-            $weight =~ s/^q=// if $weight;
-            $lang = [$l, $weight];
-        }
-        $preferred = shift @lang;
-        $preferred = $preferred->[0];
-        $preferred =~ tr/-/_/;
-    }
-    $preferred = {
-        de => 'de_DE',
-        de_de => 'de_DE',
-        en => 'en_US',
-        en_gb => 'en_US',
-        en_us => 'en_US',
-    }->{lc $preferred} || 'en_US';
-    $self->language([ $preferred, @lang ]);
     return $self;
 }
 
 sub param {
     my ($self, @args) = @_;
-    my $is_ajax = $self->cgi->param('is_ajax');
     if (wantarray) {
-        my @ret;
-        if ($is_ajax) {
-            @ret = $self->cgi->param(@args);
-            #@ret = map { Encode::encode_utf8($_) } $self->cgi->param(@args);
-        }
-        else {
-            @ret = map { Encode::decode_utf8($_) } $self->cgi->param(@args);
-        }
+        my @ret = map { Encode::decode_utf8($_) } $self->cgi->param(@args);
         return @ret;
     }
-    if ($is_ajax) {
-        return $self->cgi->param(@args);
-    }
-    else {
-        return Encode::decode_utf8($self->cgi->param(@args));
-    }
+    return Encode::decode_utf8($self->cgi->param(@args));
 }
 sub request_method {
     my ($self, @args) = @_;
