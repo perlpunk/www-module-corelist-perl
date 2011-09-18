@@ -149,7 +149,6 @@ sub version {
         my @versions;
         my $found = 0;
         my @list;
-        my $fuzzy = $submits->{fuzzy};
         my $version = Module::CoreList->first_release($module);
         my $mversion;
         my $removed;
@@ -170,7 +169,7 @@ sub version {
             date => $date,
             removed => $removed,
         };
-        if (not $submits->{fuzzy} and not $found) {
+        if (not $submits->{substr} and not $found) {
             # try case insensitive
             my $lower = lc $module;
             if (exists $lc{ $lower }) {
@@ -197,9 +196,11 @@ sub version {
                 $found = 1;
             }
         }
-        if ($submits->{fuzzy} or not $found) {
+        if ($submits->{substr} or not $found) {
             push @list, sort Module::CoreList->find_modules(qr/\Q$module/i);
-            shift @list if $found;
+            if ($found) {
+                @list = grep { $_ ne $module } @list;
+            }
         }
         for my $mod (@list) {
             my $version = Module::CoreList->first_release($mod);

@@ -247,3 +247,9 @@ hr {
     border: 0px solid grey;
     border-top: 1px solid grey;
 }
+p.usage {
+    color: #404040;
+}
+p.usage a {
+    color: #404040;
+}

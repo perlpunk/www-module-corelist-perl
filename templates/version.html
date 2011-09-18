@@ -1,5 +1,16 @@
 
 <h3>Find out if a perl module is in core and since when.</h3>
+<p class="usage">
+You can enter the full name of the module. Search is case insensitive.
+If the module is not found, a search for the substring is started. If you
+choose substring search, a search for the substring is done in any case.<br>
+Examples:
+<a href="[%= .self %]/version?module=list::util">list::util</a>,
+<a href="[%= .self %]/version?module=AutoLoader">AutoLoader</a>,
+<a href="[%= .self %]/version?module=perlio::scalar">perlio::scalar</a>,
+<a href="[%= .self %]/version?module=Test;submit.substr=1">Test (substring)</a>,
+<a href="[%= .self %]/version?module=test;submit.substr=1">test</a>
+</p>
 [%include version_form.html %]
 
 [%with .show_version %]
