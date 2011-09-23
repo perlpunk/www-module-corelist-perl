@@ -27,6 +27,7 @@ my %actions = (
     pversion => 1,
     diff => 1,
     index => 1,
+    about => 1,
 );
 my %lc;
 # prepare for case insensitive searching - faster then a regex search
@@ -387,6 +388,9 @@ sub diff {
         $stash->{v2} = $v2;
 
     }
+}
+
+sub about {
 }
 
 sub format_perl_version {

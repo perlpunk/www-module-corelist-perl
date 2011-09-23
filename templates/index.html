@@ -34,6 +34,9 @@ Powered by <a href="https://metacpan.org/module/Module::CoreList">Module::CoreLi
     <li [%if .selected.diff %]class="selected"[%/if %]>
         <a href="[%= .self %]/diff">Diff</a>
     </li>
+    <li [%if .selected.about %]class="selected"[%/if %]>
+        <a href="[%= .self %]/about">About</a>
+    </li>
 </ul>
     </div>
 </div>
@@ -55,6 +58,9 @@ Powered by <a href="https://metacpan.org/module/Module::CoreList">Module::CoreLi
 [%case diff %]
 <h3>Compare two perl versions for added, removed or changed modules.</h3>
 [%include diff.html %]
+
+[%case about %]
+[%include about.html %]
 
 [%/switch .action %]
 
