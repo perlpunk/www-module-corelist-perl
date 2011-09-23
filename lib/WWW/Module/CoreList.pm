@@ -152,6 +152,7 @@ sub version {
         my $version = Module::CoreList->first_release($module);
         my $mversion;
         my $removed;
+        my $removed_formatted;
         if ($version and exists $Module::CoreList::version{$version}) {
             $mversion = $Module::CoreList::version{$version}->{$module};
             $found = 1;
@@ -160,6 +161,7 @@ sub version {
         if ($version) {
             $date = $Module::CoreList::released{$version};
             $removed = Module::CoreList->removed_from($module);
+            $removed_formatted = format_perl_version($removed);
         }
         @versions = {
             name => $module,
@@ -168,6 +170,7 @@ sub version {
             mvers => $mversion,
             date => $date,
             removed => $removed,
+            removed_formatted => $removed_formatted,
         };
         if (not $submits->{substr} and not $found) {
             # try case insensitive
@@ -179,9 +182,11 @@ sub version {
                         $mversion = $Module::CoreList::version{$version}->{$module};
                     }
                     my $date;
+                    my $removed_formatted;
                     if ($version) {
                         $date = $Module::CoreList::released{$version};
                         $removed = Module::CoreList->removed_from($mod);
+                        $removed_formatted = format_perl_version($removed);
                     }
                     my $entry = {
                         name => $mod,
@@ -190,6 +195,7 @@ sub version {
                         mvers => $mversion,
                         date => $date,
                         removed => $removed,
+                        removed_formatted => $removed_formatted,
                     };
                     push @versions, $entry;
                 }
@@ -207,10 +213,12 @@ sub version {
             my $date;
             my $mv;
             my $removed;
+            my $removed_formatted;
             if ($version) {
                 $mv = $Module::CoreList::version{$version}{$mod} || 'undef';
                 $date = $Module::CoreList::released{$version};
                 $removed = Module::CoreList->removed_from($mod);
+                $removed_formatted = format_perl_version($removed);
             }
             my $entry = {
                 name => $mod,
@@ -219,6 +227,7 @@ sub version {
                 mvers => $mv,
                 date => $date,
                 removed => $removed,
+                removed_formatted => $removed_formatted,
             };
             push @versions, $entry;
         }
@@ -291,6 +300,7 @@ sub pversion {
     my $v = $request->param('perl_version') || '';
     my @versions;
     $self->stash->{p}->{perl_version} = $v;
+    $self->stash->{p}->{perl_version_formatted} = format_perl_version($v);
     if (exists $Module::CoreList::version{$v}) {
         for my $mod (sort keys %{ $Module::CoreList::version{$v} }) {
             my $mv = $Module::CoreList::version{$v}->{$mod} || 'undef';
