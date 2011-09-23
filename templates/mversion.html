@@ -5,6 +5,7 @@ Enter the full name (case sensitive) of the module and get a list of perl versio
 </p>
 [%include mversion_form.html %]
 
+<div style="float: left; clear: left">
 [%with .show_version %]
 <b><a href="https://metacpan.org/module/[%= .p.module %]">[%= .p.module %]</a></b>
 <br/>
@@ -30,3 +31,15 @@ Enter the full name (case sensitive) of the module and get a list of perl versio
 </table>
 
 [%/with .show_version %]
+</div>
+
+<div class="externalsearch" style="float: left; margin-left: 3em;">
+[%if .p.module %]
+Search for this module in
+<ul>
+<li><a href="https://metacpan.org/search?q=[%= .p.module escape=URL %]">CPAN</a></li>
+<li><a href="http://pkg-perl.alioth.debian.org/cpan2deb/#q=[%= .p.module escape=URL %]">Debian</a></li>
+<li><a href="http://code.activestate.com/ppm/search:[%= .p.module escape=URL %]/?tab=name">ActivePerl</a></li>
+</ul>
+[%/if .p.module %]
+</div>

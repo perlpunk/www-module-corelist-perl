@@ -13,6 +13,7 @@ Examples:
 </p>
 [%include version_form.html %]
 
+<div style="float: left;">
 [%with .show_version %]
 <table class="modules">                                                                                              
 <tr><th>Module</th><th>Module Version</th><th>Perl version</th><th>Perl Release</th><th>removed</th></tr>
@@ -36,5 +37,19 @@ Examples:
 </table>
 
 [%/with .show_version %]
+
+</div>
+
+<div class="externalsearch" style="float: left; margin-left: 3em;">
+[%if .p.module %]
+Search for this module in
+<ul>
+<li><a href="https://metacpan.org/search?q=[%= .p.module escape=URL %]">CPAN</a></li>
+<li><a href="http://pkg-perl.alioth.debian.org/cpan2deb/#q=[%= .p.module escape=URL %]">Debian</a></li>
+<li><a href="http://code.activestate.com/ppm/search:[%= .p.module escape=URL %]/?tab=name">ActivePerl</a></li>
+</ul>
+[%/if .p.module %]
+</div>
+
 
 
