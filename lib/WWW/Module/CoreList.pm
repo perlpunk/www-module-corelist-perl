@@ -42,8 +42,8 @@ my %lc;
         }
     }
 }
-my @perl_version_options = (map {
-    [$_, format_perl_version($_)]
+my @perl_version_options_date = (map {
+    [$_, format_perl_version($_) . " (" . $Module::CoreList::released{$_} . ")"]
 } reverse grep !/000$/, sort keys %Module::CoreList::version);
 
 sub run {
@@ -94,7 +94,7 @@ sub run {
         die "unknown action $action";
     }
     my $selected_pv = $self->request->param('perl_version');
-    $stash->{perl_versions} = [$selected_pv||'', @perl_version_options];
+    $stash->{perl_versions} = [$selected_pv||'', @perl_version_options_date];
 
 
     my $htc = HTML::Template::Compiled->new(
@@ -343,16 +343,16 @@ sub diff {
     if (! $v1 or ! $v2) {
         my @versions = sort keys %p;
         $stash->{p}->{select} = 1;
-        $stash->{perl_versions_1} = [undef, @perl_version_options];
-        $stash->{perl_versions_2} = [undef, @perl_version_options];
+        $stash->{perl_versions_1} = [undef, @perl_version_options_date];
+        $stash->{perl_versions_2} = [undef, @perl_version_options_date];
     }   
     else {
         $stash->{p}->{show} = 1;
         if ($v1 > $v2) {
             ($v2, $v1) = ($v1, $v2);
         }
-        $stash->{perl_versions_1} = [$v1, @perl_version_options];
-        $stash->{perl_versions_2} = [$v2, @perl_version_options];
+        $stash->{perl_versions_1} = [$v1, @perl_version_options_date];
+        $stash->{perl_versions_2} = [$v2, @perl_version_options_date];
         my $m1 = {};
         if (exists $p{$v1}) {
             $m1 = $p{$v1};
