@@ -253,3 +253,8 @@ p.usage {
 p.usage a {
     color: #404040;
 }
+
+div.externalsearch {
+    border: 1px dotted grey;
+    padding: 0.5em;
+}

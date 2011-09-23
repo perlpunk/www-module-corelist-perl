@@ -11,7 +11,7 @@ use Module::CoreList;
 use WWW::Module::CoreList::Request;
 use YAML qw/ LoadFile /;
 
-our $VERSION = 0.001;
+our $VERSION = 0.002;
 
 sub init {
     my ($class, $inifile) = @_;
@@ -78,6 +78,7 @@ sub run {
         $seo = 'noindex,noarchive';
     }
     my $stash = {
+        version => $conf->{version},
         self => $conf->{self},
         action => $action,
         selected => { $action => 1 },
