@@ -134,6 +134,7 @@ div.functionbox {
     min-width: 30em;
     height: 24em;
     border: 1px solid #bbbbff;
+    border-radius: 15px;
     padding: 5px;
     overflow-y: auto;
 }
@@ -167,6 +168,7 @@ div.functionbox > h1 {
     background-color: #004065;
     color: white;
     text-align: center;
+    border-radius: 15px;
 }
 
 input.button {
@@ -256,5 +258,6 @@ p.usage a {
 
 div.externalsearch {
     border: 1px dotted grey;
+    border-radius: 15px;
     padding: 0.5em;
 }
