@@ -289,8 +289,11 @@ sub mversion {
         $mod =~ s/\s+$//;
         $self->stash->{p}->{module} = $mod;
         my @versions;
+        my %seen;
         for my $v (sort keys %Module::CoreList::version) {
             next unless exists $Module::CoreList::version{$v}->{$mod};
+            my $hashref = $Module::CoreList::version{$v};
+            next if $seen{$hashref}++; # $version{'5.016000'} = $version{5.016};
             my $mv = $Module::CoreList::version{$v}{$mod};
             my $date = $Module::CoreList::released{$v};
             my $entry = {
