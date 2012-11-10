@@ -12,6 +12,7 @@ my $build = Module::Build->new(
         'HTML::Template::Compiled::Plugin::HTML_Tags' => 0.05,
         'Class::Accessor::Fast' => 0.25,
         'Module::CoreList' => 2.32,
+        'Plack' => 0,
         perl => '5.10.0',
         YAML => 0.70,
     },

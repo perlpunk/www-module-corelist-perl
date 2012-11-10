@@ -10,6 +10,7 @@ WriteMakefile
                    'HTML::Template::Compiled' => '0.95',
                    'HTML::Template::Compiled::Plugin::HTML_Tags' => '0.05',
                    'Module::CoreList' => '2.32',
+                   'Plack' => 0,
                    'Test::More' => 0,
                    'YAML' => '0.7'
                  },
