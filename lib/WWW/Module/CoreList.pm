@@ -3,22 +3,32 @@ use strict;
 use warnings;
 use Data::Dumper;
 use Carp qw(croak carp);
+use Encode;
 use base 'Class::Accessor::Fast';
 __PACKAGE__->mk_accessors(qw/ conf template request stash /);
-use CGI;
+use Plack::Request;
 use HTML::Template::Compiled;
 use Module::CoreList;
 use WWW::Module::CoreList::Request;
 use YAML qw/ LoadFile /;
 
-our $VERSION = 0.002;
+our $VERSION = 0.003;
 
+my %cl;
 sub init {
     my ($class, $inifile) = @_;
-    my $conf = LoadFile($inifile);
-    my $self = $class->new;
-    $self->conf($conf);
-    return $self;
+    unless ($cl{ $inifile }) {
+        warn __PACKAGE__.':'.__LINE__.": WWW::Module::CoreList->init($inifile)\n";
+        my $conf = LoadFile($inifile);
+        my $self = $class->new;
+        $self->conf($conf);
+        $cl{ $inifile } = $self;
+        if ($conf->{cache_dir}) {
+            my $count = HTML::Template::Compiled->preload($conf->{cache_dir});
+            warn __PACKAGE__.':'.__LINE__.": preloaded $count templates from $conf->{cache_dir}\n";
+        }
+    }
+    return $cl{ $inifile };
 }
 
 my %actions = (
@@ -47,29 +57,28 @@ my @perl_version_options_date = (map {
     [$_, format_perl_version($_) . " (" . $Module::CoreList::released{$_} . ")"]
 } reverse grep !/000$/, sort keys %Module::CoreList::version);
 
-sub run {
+sub finish {
     my ($self) = @_;
+    $self->request(undef);
+}
 
-    my $cgi_module = 'CGI';
-    my ($cgi_class, $cgi_cookie_class, $cgi_util_class)
-        = (qw/ CGI CGI::Cookie CGI::Util /);
-    if ($cgi_module eq 'CGI::Simple') {
-        s/CGI/CGI::Simple/ for ($cgi_class, $cgi_cookie_class, $cgi_util_class);
-    }
+sub run_request {
+    my ($self, $env) = @_;
+    $self->run($env);
+    my ($status, $headers, $body) = $self->output;
+    $self->finish;
+    return [ $status, $headers, [$body]];
+}
 
-    my $cgi_classes = {
-        cgi    => $cgi_class,
-        cookie => $cgi_cookie_class,
-        util   => $cgi_util_class,
-    };
-
-
-    my $request = WWW::Module::CoreList::Request->from_cgi(
-        CGI->new,
-        cgi_class => $cgi_classes,
-    );
+sub run {
+    my ($self, $env) = @_;
+    my $req = Plack::Request->new($env);
+    my $request = WWW::Module::CoreList::Request->new({
+        req => $req,
+    })->init($self);
     $self->request($request);
-    my $action = $request->action || 'index';
+
+    my $action = $request->action;
     my $conf = $self->conf;
     my @seo = @{ $conf->{seo}->{ $action } || [] };
     @seo = qw/ noindex noarchive / unless @seo;
@@ -87,6 +96,7 @@ sub run {
         },
         corelist_version => Module::CoreList->VERSION,
         static => $conf->{static},
+        allow_regex => $conf->{allow_regex},
     };
     $self->stash($stash);
     if (exists $actions{ $action }) {
@@ -111,8 +121,8 @@ sub run {
         filename        => 'index.html',
         search_path_on_include => 1,
         loop_context_vars       => 1,
+        expire_time     => $self->{conf}->{template_expire} || 60*60*24,
     );
-#    warn __PACKAGE__.':'.__LINE__.$".Data::Dumper->Dump([\$stash], ['stash']);
     $htc->param(
         %$stash,
     );
@@ -122,17 +132,11 @@ sub run {
 
 sub output {
     my ($self) = @_;
-
-    my $header = $self->request->cgi->header(
-        -charset => 'utf-8',
-#        -status => $status,
-#            @$cookie
-#            ? (-cookie => [map { $_->as_string } @$cookie])
-#            : (),
-    );
-
-    my $output = $self->template->output;
-    return $header, $output, ':encoding(utf-8)';
+    my $headers = [
+        'Content-Type', 'text/html; charset=utf-8',
+    ];
+    my $output = encode_utf8( $self->template->output );
+    return 200, $headers, $output;
 }
 
 sub index {
@@ -145,6 +149,7 @@ sub version {
     my $submits = $request->submit;
     my $module = $request->param('module');
     if ($module) {
+        my $regex_search = $submits->{regex} && $self->{conf}->{allow_regex};
         $module =~ s/^\s+//;
         $module =~ s/\s+$//;
         $self->stash->{p}->{module} = $module;
@@ -174,37 +179,25 @@ sub version {
             removed => $removed,
             removed_formatted => $removed_formatted,
         };
-        if (not $submits->{substr} and not $found) {
+        if (not $submits->{substr} and not $found and not $regex_search) {
             # try case insensitive
             my $lower = lc $module;
             if (exists $lc{ $lower }) {
-                for my $mod (@{ $lc{ $lower } }) {
-                    my $version = Module::CoreList->first_release($mod);
-                    if ($version and exists $Module::CoreList::version{$version}) {
-                        $mversion = $Module::CoreList::version{$version}->{$module};
-                    }
-                    my $date;
-                    my $removed_formatted;
-                    if ($version) {
-                        $date = $Module::CoreList::released{$version};
-                        $removed = Module::CoreList->removed_from($mod);
-                        $removed_formatted = format_perl_version($removed);
-                    }
-                    my $entry = {
-                        name => $mod,
-                        vers => $version,
-                        formatted => format_perl_version($version),
-                        mvers => $mversion,
-                        date => $date,
-                        removed => $removed,
-                        removed_formatted => $removed_formatted,
-                    };
-                    push @versions, $entry;
-                }
+                my @entries = $self->_first_release(@{ $lc{ $lower } });
+                push @versions, @entries;
                 $found = 1;
             }
         }
-        if ($submits->{substr} or not $found) {
+        if ($regex_search) {
+            my $re = eval { qr/$module/ };
+            my @mods = Module::CoreList->find_modules($re);
+            if (@mods) {
+                my @entries = $self->_first_release(@mods);
+                push @versions, @entries;
+                $found = 1;
+            }
+        }
+        elsif ($submits->{substr} or not $found) {
             push @list, sort Module::CoreList->find_modules(qr/\Q$module/i);
             if ($found) {
                 @list = grep { $_ ne $module } @list;
@@ -254,6 +247,36 @@ sub version {
         $self->stash->{form} = 1;
     }
 
+}
+sub _first_release {
+    my ($self, @mods) = @_;
+    my @versions;
+    for my $mod (@mods) {
+        my $mversion;
+        my $removed;
+        my $version = Module::CoreList->first_release($mod);
+        if ($version and exists $Module::CoreList::version{$version}) {
+            $mversion = $Module::CoreList::version{$version}->{$mod};
+        }
+        my $date;
+        my $removed_formatted;
+        if ($version) {
+            $date = $Module::CoreList::released{$version};
+            $removed = Module::CoreList->removed_from($mod);
+            $removed_formatted = format_perl_version($removed);
+        }
+        my $entry = {
+            name => $mod,
+            vers => $version,
+            formatted => format_perl_version($version),
+            mvers => $mversion,
+            date => $date,
+            removed => $removed,
+            removed_formatted => $removed_formatted,
+        };
+        push @versions, $entry;
+    }
+    return @versions;
 }
 
 sub mversion {
@@ -415,15 +438,24 @@ WWW::Module::CoreList - A web interface to Module::CoreList
 
 =head1 SYNOPSIS
 
-    # run this in a CGI script, for example
-    my $inifile = '/path/to/corelist.yaml';
-    my $cl = WWW::Module::CoreList->init($inifile);
-    $cl->run;
-    my ($header, $out, $mode) = $cl->output;
-    print $header;
-    binmode STDOUT, $mode;
-    print $out if defined $out;
+You can run this web application on your own server:
 
+    # run with Plack:
+    # plackup bin/app.psgi
+    # or
+    # CORELISTINI=/path/to/corelist.yaml plackup bin/app.psgi
+
+    # run with mod_perl in Apache:
+    <Perl>
+    use lib '/.../www-module-corelist-perl/lib';
+    </Perl>
+    PerlPostConfigRequire /.../www-module-corelist-perl/bin/mod_perl_startup.pl
+    <Location /corelist>
+        SetHandler perl-script
+        PerlSetVar inifile /.../www-module-corelist-perl/conf/corelist.yaml
+        PerlResponseHandler WWW::Module::CoreList::Handler2
+    </Location>
+    Alias /cl/ /.../www-module-corelist-perl/htdocs/
 
 =head1 SEE ALSO
 
@@ -435,7 +467,7 @@ Tina Mueller
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2011 by Tina Mueller
+Copyright (C) 2011-2012 by Tina Mueller
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself, either Perl version 5.6.1 or, at your option,

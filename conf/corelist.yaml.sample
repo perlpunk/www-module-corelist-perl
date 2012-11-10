@@ -1,11 +1,20 @@
 ---
-version: 0.002
+version: 0.003
 self: /corelist
 # url to static files if corelist/htdocs is not your DocumentRoot
 # set Alias /cl/ /path/to/corelist/htdocs/ in your webserver
 static: /cl
-cache_dir: /.../corelist/htc_cache
+
+# template directory
 templates: /.../corelist/templates
+
+# template file cache (recommened for multi process server)
+cache_dir: /.../corelist/htc_cache
+
+# set expire time for templates (for development)
+template_expire: 3
+# allow regex input for /corelist/version
+allow_regex: 0
 seo:
 # which functions should be indexed and/or archived by search engines
 # typically only the index page makes sense here

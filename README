@@ -2,14 +2,24 @@ NAME
     WWW::Module::CoreList - A web interface to Module::CoreList
 
 SYNOPSIS
-        # run this in a CGI script, for example
-        my $inifile = '/path/to/corelist.yaml';
-        my $cl = WWW::Module::CoreList->init($inifile);
-        $cl->run;
-        my ($header, $out, $mode) = $cl->output;
-        print $header;
-        binmode STDOUT, $mode;
-        print $out if defined $out;
+    You can run this web application on your own server:
+
+        # run with Plack:
+        # plackup bin/app.psgi
+        # or
+        # CORELISTINI=/path/to/corelist.yaml plackup bin/app.psgi
+
+        # run with mod_perl in Apache:
+        <Perl>
+        use lib '/.../www-module-corelist-perl/lib';
+        </Perl>
+        PerlPostConfigRequire /.../www-module-corelist-perl/bin/mod_perl_startup.pl
+        <Location /corelist>
+            SetHandler perl-script
+            PerlSetVar inifile /.../www-module-corelist-perl/conf/corelist.yaml
+            PerlResponseHandler WWW::Module::CoreList::Handler2
+        </Location>
+        Alias /cl/ /.../www-module-corelist-perl/htdocs/
 
 SEE ALSO
     Module::CoreList
@@ -18,7 +28,7 @@ AUTHOR
     Tina Mueller
 
 COPYRIGHT AND LICENSE
-    Copyright (C) 2011 by Tina Mueller
+    Copyright (C) 2011-2012 by Tina Mueller
 
     This library is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself, either Perl version 5.6.1 or, at
