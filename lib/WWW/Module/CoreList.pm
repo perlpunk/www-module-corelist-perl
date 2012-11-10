@@ -72,6 +72,7 @@ sub run_request {
 
 sub run {
     my ($self, $env) = @_;
+    $env ||= {};
     my $req = Plack::Request->new($env);
     my $request = WWW::Module::CoreList::Request->new({
         req => $req,

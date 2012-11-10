@@ -14,7 +14,7 @@ SKIP: {
     my $inifile = 't/test_corelist.yaml';
     my $cl = WWW::Module::CoreList->init($inifile);
     $cl->run;
-    my ($header, $out, $mode) = $cl->output;
+    my ($status, $header, $out) = $cl->output;
     my $tree = HTML::TreeBuilder::XPath->new;
     $tree->parse($out);
 
