@@ -153,6 +153,7 @@ sub version {
         my $regex_search = $submits->{regex} && $self->{conf}->{allow_regex};
         $module =~ s/^\s+//;
         $module =~ s/\s+$//;
+        $module =~ s{^/+}{};
         $self->stash->{p}->{module} = $module;
         my @versions;
         my $found = 0;
