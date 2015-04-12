@@ -53,9 +53,12 @@ my %lc;
         }
     }
 }
+my %seen_alias;
 my @perl_version_options_date = (map {
+    my $formatted = format_perl_version($_);
+    $seen_alias{ $formatted }++ ? () :
     [$_, format_perl_version($_) . " (" . $Module::CoreList::released{$_} . ")"]
-} reverse grep !/000$/, sort keys %Module::CoreList::version);
+} reverse sort keys %Module::CoreList::version);
 
 sub finish {
     my ($self) = @_;
