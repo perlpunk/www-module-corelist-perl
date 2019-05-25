@@ -10,7 +10,7 @@ use Plack::Request;
 use HTML::Template::Compiled;
 use Module::CoreList;
 use WWW::Module::CoreList::Request;
-use YAML qw/ LoadFile /;
+use YAML::PP;
 
 our $VERSION = 0.003;
 
@@ -19,7 +19,7 @@ sub init {
     my ($class, $inifile) = @_;
     unless ($cl{ $inifile }) {
         warn __PACKAGE__.':'.__LINE__.": WWW::Module::CoreList->init($inifile)\n";
-        my $conf = LoadFile($inifile);
+        my $conf = YAML::PP->new->load_file($inifile);
         my $self = $class->new;
         $self->conf($conf);
         $cl{ $inifile } = $self;

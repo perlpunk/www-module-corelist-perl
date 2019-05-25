@@ -14,7 +14,7 @@ my $build = Module::Build->new(
         'Module::CoreList' => 2.32,
         'Plack' => 0,
         perl => '5.10.0',
-        YAML => 0.70,
+        'YAML:PP' => 0.016,
     },
     dist_abstract => 'Web Interface to Module::CoreList',
     build_requires => {

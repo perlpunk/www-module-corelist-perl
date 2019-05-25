@@ -12,7 +12,7 @@ WriteMakefile
                    'Module::CoreList' => '2.32',
                    'Plack' => 0,
                    'Test::More' => 0,
-                   'YAML' => '0.7'
+                   'YAML::PP' => '0.016'
                  },
   'INSTALLDIRS' => 'site',
   'EXE_FILES' => [
